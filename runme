@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+set -e
+
+# don't change these 4 lines
+SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+TRAINING=$1;
+INPUT=$2;
+OUTPUT=$3;
+
+# you should change the lines below
+
+# prepare the training data
+python $SCRIPTDIR/preprocess.py < $TRAINING > $SCRIPTDIR/train.trees.pre
+
+python $SCRIPTDIR/unknown.py < $SCRIPTDIR/train.trees.pre > $SCRIPTDIR/train.trees.pre.unk
+
+python $SCRIPTDIR/Q1Q5.py $SCRIPTDIR/train.trees.pre.unk > $SCRIPTDIR/outputQ1.txt
+
+sort $SCRIPTDIR/outputQ1.txt | uniq -c | sort -k1nr > $SCRIPTDIR/all.rules
+
+awk -F '->' '{print $1}' $SCRIPTDIR/all.rules | sort -k2r > $SCRIPTDIR/sorted.all.rules
+
+awk '{b[$2]+=$1} END { for (i in b) { print b[i],i } } ' $SCRIPTDIR/sorted.all.rules | sort -k2r > $SCRIPTDIR/left.count
+
+python $SCRIPTDIR/Q1Out.py $INPUT
+
+python $SCRIPTDIR/postprocess.py $SCRIPTDIR/dev.parses > $OUTPUT
