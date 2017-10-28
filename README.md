@@ -1,6 +1,6 @@
 # Improved-CKY-Parser
 
-#Modifications
+# Modifications
 
 1. Horizontal Markovization:
 I. If we store only sibling’s label along with the nodes’s label in the tree after binarization and removing single child parent relationship, it
@@ -15,10 +15,10 @@ II. Again, it is done to decrease non-specificity of the grammar.
 II. Currently, the heuristic used is to right binarize if the node’s label is SQ. I added NP to it too.
 III. NP being the highest used Non-terminal, right binarizing the tree on it increases the score.
 
-#The current F1 score is 0.8956
+# The current F1 score is 0.8956
 
-##How to run:
+## How to run:
 ./runme train.trees dev.strings dev.parses.post
 
-##For evaluation purposes:
+## For evaluation purposes:
 python evalb.py dev.parses.post dev.trees
